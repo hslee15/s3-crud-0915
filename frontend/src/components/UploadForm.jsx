@@ -41,13 +41,13 @@ const UploadForm = ({ onDone }) => {
         description:desc
       })
       console.log('db 업로드 성공 ', metaRes.data)
-      
+
       onDone?.()
-      seeTitle("")
+      setTitle("")
       setDesc("")
       setFile(null)
-      console.log('db 업로드 완료 ')
-      
+      console.log('업로드 완료 ')
+
     } catch (error) {
       console.error("업로드 에러",error)
       alert('업로드에 실패했습니다.')
@@ -68,8 +68,8 @@ const UploadForm = ({ onDone }) => {
 
         <input
           value={title}
+          onChange={(e)=>setTitle(e.target.value)}
           type="text"
-          onChange={(e)=>stTitle(e.target.value)}
           placeholder='title' />
         <input
           value={desc}
