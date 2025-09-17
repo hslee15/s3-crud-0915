@@ -112,14 +112,25 @@ router.patch('/:id',async(req,res)=>{
 
 router.delete('/:id',async(req,res)=>{
     try {
+
         const it=await FileItem.findByIdAndDelete(req.params.id)
 
         if(!it) return res.sendStatus(404)
 
-        await deleteObject(it.key)
-        await it.deleteOne()
+        const rowKey=typeof it.key === 'string'?it.key:'';
+        const key=decodeURIComponent(rowKey)
 
-        res.status(201).json({message:"파일 삭제 완료",id: req.params.id})
+        if(!key.startsWith('uploads/')){
+            console.log('upexpected key',key)
+            return res.status(400).json({error:"삭제 가능한 경로가 아닙니다."})
+        }
+
+        console.log('s3 delete key',key)
+
+            await deleteObject(it.key)
+            await it.deleteOne()
+
+        res.status(204).end()
         
     } catch (error) {
         console.error('파일 삭제 에러',error)
